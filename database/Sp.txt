@@ -1,0 +1,72 @@
+USE [EMPLOYEE]
+GO
+/****** Object:  StoredProcedure [dbo].[EMPLOYEEDSP]    Script Date: 10-08-2023 5.43.55 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+ALTER PROCEDURE [dbo].[EMPLOYEEDSP]
+	@EmployeeId int=0,
+	@NAME varchar(50) = NULL,
+	@DOB varchar(50) = NULL,
+	@EXPERIENCE varchar(20) = null,
+	@NUMBER varchar(20) = null,
+	@EMAILID varchar(50) = NULL,
+	@Action varchar(100) = NULL
+
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	IF(@Action = 'INSERTEMPLOYEEDETAILS')
+	BEGIN
+		IF(@EmployeeId <>0)
+		BEGIN
+			Delete from EMPLOYEED where EmployeeId=@EmployeeId
+		END
+
+		IF(@EmployeeId=0)
+		BEGIN
+			set @EmployeeId =isnull((Select top 1 EmployeeId+1 from EMPLOYEED order by EmployeeId desc),1)
+		END
+
+		INSERT INTO EMPLOYEED(EmployeeId,NAME,DOB,EXPERIENCE,NUMBER,EMAILID)
+		VALUES (@EmployeeId,@NAME,@DOB,@EXPERIENCE,@NUMBER,@EMAILID)
+
+		Select '1'
+	END
+
+    ELSE IF(@Action = 'GETEMPLOYEEDETAILS')
+	BEGIN
+		SELECT * from EMPLOYEED P
+		ORDER BY NAME ASC;
+
+	END
+
+	ELSE IF @Action='GetEmployeeDetailsById'
+	BEGIN
+		SELECT * from EMPLOYEED where EmployeeId=@EmployeeId
+		
+	END
+
+	ELSE IF @Action='DeleteEmployeeDetails'
+	BEGIN
+	 Delete from EMPLOYEED where EmployeeId=@EmployeeId
+	 select 1
+	END
+
+	--ELSE IF(@Action = 'GetSpecificCustomerDetails')
+	--BEGIN
+	--	SELECT top 1 P.ID,P.Username,P.EmailID,P.Mobile,P.Password,P.Nationality,P.Gender,isnull(P.dob,'') as dob,Gender from CUSTOMDETAILS P
+	--	left join CUSTOMDETAILS2 C on C.CustomerID = P.ID
+		--where P.EmailID=@EmailID AND P.Password=@Password
+	--	where P.EmailID='abc@gmail.com' AND P.Password='abcd'
+	--END
+
+
+
+END

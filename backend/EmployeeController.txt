@@ -1,0 +1,193 @@
+using EMPLOYEEDATABASE.MODEL;
+using Microsoft.AspNetCore.JsonPatch.Internal;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+
+
+namespace EMPLOYEEDATABASE.Controllers
+{
+    public class EMPLOYEEController : Controller
+    {
+        private readonly IConfiguration _configuration;
+
+        public object ID { get; private set; }
+
+        
+       public EMPLOYEEController(IConfiguration _Configuration)
+        {
+
+            _configuration = _Configuration;
+        }
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        ///// ////////////////////////////////////////////   AYISHA POST /// ////////////////////////////////////////////   /// ////////////////////////////////////////////   /// ////////////////////////////////////////////
+        
+        //[HttpPost("EMPLOYEE/INSERTEMPLOYEE")]
+        //public JsonResult INSERTEMPLOYEEDETAILS([FromBody] EMPLOYEEMODEL pro)
+        //{
+        //    bool res = false;
+        //    string constr = _configuration.GetConnectionString("prod");
+        //    using (SqlConnection con = new SqlConnection(constr))
+        //    {
+        //    SqlCommand sqlCmd = new SqlCommand("EMPLOYEEDSP", con);
+        //    sqlCmd.CommandType = CommandType.StoredProcedure;
+        //    sqlCmd.Parameters.AddWithValue("@Action", "INSERTEMPLOYEEDETAILS");
+        //    // sqlCmd.Parameters.AddWithValue("@CustomerId", ID);
+        //    sqlCmd.Parameters.AddWithValue("@NAME",pro.NAME);
+        //    sqlCmd.Parameters.AddWithValue("@DOB", pro.DOB);
+        //    sqlCmd.Parameters.AddWithValue("@EXPERIENCE",pro.EXPERIENCE);
+        //    sqlCmd.Parameters.AddWithValue("@NUMBER", pro.NUMBER);
+        //    sqlCmd.Parameters.AddWithValue("@EMAILID", pro.EMAILID);
+                        
+        //    sqlCmd.Connection = con;
+        //     //   con.Open();
+        //     //   sqlCmd.ExecuteNonQuery();
+        //        res = true;
+        //        con.Close();
+
+        //    }
+        //    // return Json(new { });
+        //    return Json(new { success = res });
+        //}
+
+
+      
+
+        /// ////////////////////////////////////////////   GET           /// ////////////////////////////////////////////   /// ////////////////////////////////////////////
+
+        [HttpGet("Login/GetEmployeeDetails")]
+       public JsonResult GetCutomerDetails()
+       {
+           string constr = _configuration.GetConnectionString("con");
+           DataTable dataTable = new DataTable();
+           List<EMPLOYEEMODEL> list = new List<EMPLOYEEMODEL>();
+           SqlConnection con = new SqlConnection(constr);
+           SqlCommand sqlCmd = new SqlCommand("EMPLOYEEDSP", con);
+           sqlCmd.CommandType = CommandType.StoredProcedure;
+           sqlCmd.Parameters.AddWithValue("@Action", "GETEMPLOYEEDETAILS");
+           SqlDataAdapter adapter = new SqlDataAdapter(sqlCmd);
+           adapter.Fill(dataTable);
+           con.Close();
+           if (dataTable.Rows.Count > 0)
+           {
+               for (int i = 0; i < dataTable.Rows.Count; i++)
+               {
+                   list.Add(new EMPLOYEEMODEL
+                   {
+                       employeeId = (Int32)(dataTable.Rows[i]["EmployeeId"] ?? 0),
+                       name = dataTable.Rows[i]["NAME"].ToString(),
+                       dob = dataTable.Rows[i]["DOB"].ToString(),
+                       experience =dataTable.Rows[i]["EXPERIENCE"].ToString(),
+                       number =dataTable.Rows[i]["NUMBER"].ToString(),
+                       emailId = dataTable.Rows[i]["EMAILID"].ToString(),
+                      
+                   });
+               }
+           }
+           return Json(new { Employee = list });
+       }
+
+        /////////////////////////////////////////////////////////////////////////
+        ///
+
+        [HttpPost("POST/POSTEMPLOYEE")]
+        public JsonResult PostValue([FromBody] EMPLOYEEMODEL c)
+        {
+            string constr = _configuration.GetConnectionString("con");
+            SqlConnection con = new SqlConnection(constr);
+            con.Open();
+            SqlCommand sqlCmd = new SqlCommand("EMPLOYEEDSP", con);
+            sqlCmd.CommandType = CommandType.StoredProcedure;
+            sqlCmd.Parameters.AddWithValue("@Action", "INSERTEMPLOYEEDETAILS");
+            //  sqlCmd.Parameters.AddWithValue("@ID", c.ID);
+            sqlCmd.Parameters.AddWithValue("@EmployeeId", c.employeeId);
+            sqlCmd.Parameters.AddWithValue("@NAME", c.name);
+            sqlCmd.Parameters.AddWithValue("@DOB", c.dob);
+            sqlCmd.Parameters.AddWithValue("@EXPERIENCE", c.experience);
+            sqlCmd.Parameters.AddWithValue("@NUMBER", c.number);
+            sqlCmd.Parameters.AddWithValue("@EMAILID", c.emailId);
+            string str = sqlCmd.ExecuteScalar().ToString();
+
+            con.Close();
+            if (str == "1")
+            {
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+            }
+
+
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        [HttpGet("Login/GetEmployeeDetailsById")]
+        public JsonResult GetCutomerDetails(int EmployeeId)
+        {
+            string constr = _configuration.GetConnectionString("con");
+            DataTable dataTable = new DataTable();
+            List<EMPLOYEEMODEL> list = new List<EMPLOYEEMODEL>();
+            SqlConnection con = new SqlConnection(constr);
+            SqlCommand sqlCmd = new SqlCommand("EMPLOYEEDSP", con);
+            sqlCmd.CommandType = CommandType.StoredProcedure;
+            sqlCmd.Parameters.AddWithValue("@Action", "GetEmployeeDetailsById");
+            sqlCmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
+            SqlDataAdapter adapter = new SqlDataAdapter(sqlCmd);
+            adapter.Fill(dataTable);
+            con.Close();
+            if (dataTable.Rows.Count > 0)
+            {
+                for (int i = 0; i < dataTable.Rows.Count; i++)
+                {
+                    list.Add(new EMPLOYEEMODEL
+                    {
+                        employeeId = (Int32)(dataTable.Rows[i]["EmployeeId"] ?? 0),
+                        name = dataTable.Rows[i]["NAME"].ToString(),
+                        dob = dataTable.Rows[i]["DOB"].ToString(),
+                        experience = dataTable.Rows[i]["EXPERIENCE"].ToString(),
+                        number = dataTable.Rows[i]["NUMBER"].ToString(),
+                        emailId = dataTable.Rows[i]["EMAILID"].ToString(),
+
+                    });
+                }
+            }
+            return Json(new { employee = list });
+        }
+
+        [HttpPost("Employee/DeleteEmployeeDetails")]
+        public JsonResult DeleteValue([FromBody] EMPLOYEEMODEL c)
+        {
+            string constr = _configuration.GetConnectionString("con");
+            SqlConnection con = new SqlConnection(constr);
+            con.Open();
+            SqlCommand sqlCmd = new SqlCommand("EMPLOYEEDSP", con);
+            sqlCmd.CommandType = CommandType.StoredProcedure;
+            sqlCmd.Parameters.AddWithValue("@Action", "DeleteEmployeeDetails");
+            //  sqlCmd.Parameters.AddWithValue("@ID", c.ID);
+            sqlCmd.Parameters.AddWithValue("@EmployeeId", c.employeeId);
+            string str = sqlCmd.ExecuteScalar().ToString();
+
+            con.Close();
+            if (str == "1")
+            {
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+            }
+
+
+        }
+
+    }
+}

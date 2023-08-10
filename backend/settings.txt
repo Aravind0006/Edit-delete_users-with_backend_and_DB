@@ -1,0 +1,4 @@
+"AllowedHosts": "*",
+  "ConnectionStrings": {
+    "con": "Server=DESKTOP-GO8GVS6;Database=EMPLOYEE;Trusted_Connection=True;TrustServerCertificate=Yes"
+  }

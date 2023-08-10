@@ -1,0 +1,17 @@
+for Create a database using 
+
+create database EMPLOYEE
+
+for creating a table using
+
+create table EMPLOYEED (
+ID int,
+Employeeid varchar(50),
+NAME varchar(50),
+DOB varchar(50),
+EXPERIENCE varchar(50),
+NUMBER varchar(50),
+EMAILID varchar(50),
+)
+
+inside programmability -> store procedure ->insert sp onnext text file as same

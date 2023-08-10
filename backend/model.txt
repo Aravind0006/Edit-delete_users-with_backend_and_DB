@@ -1,0 +1,12 @@
+namespace EMPLOYEEDATABASE.MODEL
+{
+    public class EMPLOYEEMODEL
+    {
+        public int employeeId { get; set; }
+        public string name { get; set; }
+        public string dob { get; set; }
+        public string experience { get; set; }
+        public string number { get; set; }
+        public string emailId { get; set; }
+    }
+}

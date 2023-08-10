@@ -1,0 +1,2 @@
+1.Microsoft.AspNetCore.Mvc.Formatters.Json
+2.Microsoft.Data.SqlClient

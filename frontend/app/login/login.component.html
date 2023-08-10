@@ -1,0 +1,57 @@
+<div class="main">
+    <div class="card" style="width: 1000px;height: fit-content;">
+        <div class="card-body">
+            <form class="row g-3" [formGroup]="f">
+                <div class="col-md-6">
+                    <label for="input4" class="form-label">Enter your Name</label>
+                    <input formControlName="Name" type="Name" class="form-control" id="input4"
+                        [ngClass]="{'is-invalid': submitted &&f.controls['Name'].invalid }" required placeholder="Name">
+                    <div style="color: red;" *ngIf="submitted && f.controls['Name'].invalid" class="invalid-feedback">
+                        <div *ngIf="f.controls['Name'].errors required">Name is required</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputCity" class="form-label">Email</label>
+                    <input type="email" formControlName="Email" class="form-control" id="inputCity" placeholder="Email"
+                        [ngClass]="{'is-invalid': submitted &&f.controls['Email'].invalid }" required>
+                    <div style="color: red;" *ngIf="submitted && f.controls['Email'].invalid" class="invalid-feedback">
+                        <div *ngIf="f.controls['Email'].errors required">Email is required</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="inputAddress" class="form-label">EXPERIENCE</label>
+                    <input type="number" formControlName="experience"
+                        [ngClass]="{'is-invalid': submitted &&f.controls['experience'].invalid }" required
+                        class="form-control" id="inputAddress" placeholder="experience">
+                    <div style="color: red;" *ngIf="submitted && f.controls['experience'].invalid"
+                        class="invalid-feedback">
+                        <div *ngIf="f.controls['experience'].errors required">Password required</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="inputAddress2" class="form-label">Mobile Number</label>
+                    <input type="number" class="form-control" id="inputAddress2" formControlName="Number"
+                        [ngClass]="{'is-invalid': submitted &&f.controls['Number'].invalid }" required
+                        placeholder="Mobile Number">
+                    <div style="color: red;" *ngIf="submitted && f.controls['Number'].invalid" class="invalid-feedback">
+                        <div *ngIf="f.controls['Number'].errors required">Mobile Number is required</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputPassword4" class="form-label">Date of Birth</label>
+                    <input type="date" formControlName="Dob"
+                        [ngClass]="{ 'is-invalid': submitted && f.controls['Dob'].invalid }" required
+                        class="form-control" id="inputPassword4">
+                    <div style="color: red;" *ngIf="submitted && f.controls['Dob'].invalid" class="invalid-feedback">
+                        <div *ngIf="f.controls['Dob'].errors required">Date of Birth is required</div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" (click)="submit()"
+                        class="btn btn-primary">{{EmployeeId==0?'Submit':'Update'}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
